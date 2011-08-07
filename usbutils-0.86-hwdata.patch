@@ -1,0 +1,62 @@
+--- usbutils-0.86/Makefile.am_old	2009-09-16 11:56:26.000000000 +0200
++++ usbutils-0.86/Makefile.am	2009-09-16 11:57:40.000000000 +0200
+@@ -1,18 +1,9 @@
+ AM_LDFLAGS = \
+ 	-Wl,--as-needed
+ 
+-data_DATA = \
+-	usb.ids
+-if HAVE_ZLIB
+-data_DATA += usb.ids.gz
+-endif
+-
+ sbin_PROGRAMS = \
+ 	lsusb
+ 
+-sbin_SCRIPTS = \
+-	update-usbids.sh
+-
+ bin_SCRIPTS = \
+ 	usb-devices
+ 
+@@ -26,7 +17,7 @@
+ 
+ lsusb_CPPFLAGS = \
+ 	$(AM_CPPFLAGS) \
+-	-DDATADIR=\"$(datadir)\"
++	-DDATADIR=\"$(datadir)/hwdata\"
+ 
+ lsusb_LDADD = \
+ 	$(LIBUSB_LIBS)
+@@ -36,20 +27,11 @@
+ 	usb-devices.1
+ 
+ EXTRA_DIST = \
+-	usb.ids \
+-	update-usbids.sh.in \
+ 	lsusb.8.in \
+ 	usb-devices.1.in \
+ 	usb-devices \
+ 	usbutils.pc.in
+ 
+-usb.ids.gz: $(srcdir)/usb.ids
+-	gzip -c -9 $< > $@
+-
+-update-usbids.sh: $(srcdir)/update-usbids.sh.in
+-	sed 's|@usbids@|$(datadir)/usb.ids|g' $< >$@
+-	chmod 755 $@
+-
+ lsusb.8: $(srcdir)/lsusb.8.in
+ 	sed 's|VERSION|$(VERSION)|g;s|@usbids@|$(datadir)/usb.ids|g' $< >$@
+ 
+@@ -63,10 +45,8 @@
+ 	sed 's|@usbids@|$(datadir)/usb.ids|g;s|@VERSION[@]|$(VERSION)|g' $< >$@
+ 
+ DISTCLEANFILES = \
+-	usb.ids.gz \
+ 	lsusb.8 \
+ 	usb-devices.1 \
+-	update-usbids.sh \
+ 	usbutils.pc
+ 
+ distclean-local:
